@@ -1,7 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { Field } from "redux-form";
+
+import { FieldValidation } from "../../../fieldValidation";
+
+
 
 const renderInput = field => {
   const className = classNames([
@@ -10,14 +13,14 @@ const renderInput = field => {
   ]);
   return (
     <div className={className}>
-      <label className="control-label" htmlFor={"field-" + field.name}>
+      <label className="control-label" htmlFor={field.id}>
         {field.label}
       </label>
-      <textarea
+      <input
         {...field.input}
-        className="form-control"
-        id={"field-" + field.fieldName}
+        type={field.type}
         required={field.required}
+        className="form-control"
         placeholder={field.placeholder}
       />
       {field.meta.touched &&
@@ -31,9 +34,9 @@ const renderInput = field => {
   );
 };
 
-const TextareaWidget = props => {
+const BaseInputWidget = props => {
   return (
-    <Field
+    <FieldValidation
       component={renderInput}
       label={props.label}
       name={props.fieldName}
@@ -41,17 +44,20 @@ const TextareaWidget = props => {
       id={"field-" + props.fieldName}
       placeholder={props.schema.default}
       description={props.schema.description}
+      type={props.type}
+      normalize={props.normalizer}
+      schema={props.schema}
     />
   );
 };
 
-TextareaWidget.propTypes = {
+BaseInputWidget.propTypes = {
   schema: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
+  required: PropTypes.bool,
   fieldName: PropTypes.string,
   label: PropTypes.string,
-  theme: PropTypes.object,
-  multiple: PropTypes.bool,
-  required: PropTypes.bool
+  normalizer: PropTypes.func
 };
 
-export default TextareaWidget;
+export default BaseInputWidget;
